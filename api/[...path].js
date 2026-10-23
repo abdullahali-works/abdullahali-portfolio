@@ -16,6 +16,8 @@ async function setup(sql) {
     await sql.query("CREATE TABLE IF NOT EXISTS portfolio_admin (id integer PRIMARY KEY, username text NOT NULL, password_hash text NOT NULL, password_salt text NOT NULL)");
     await sql.query("CREATE TABLE IF NOT EXISTS portfolio_sessions (token_hash text PRIMARY KEY, expires_at bigint NOT NULL)");
     await sql.query("CREATE TABLE IF NOT EXISTS portfolio_data (id integer PRIMARY KEY, content jsonb NOT NULL)");
+    await sql.query("CREATE TABLE IF NOT EXISTS portfolio_admin_recovery (id integer PRIMARY KEY, used boolean NOT NULL DEFAULT false)");
+    await sql.query("INSERT INTO portfolio_admin_recovery (id, used) VALUES (1, false) ON CONFLICT (id) DO NOTHING");
     const rows = await sql.query("SELECT id FROM portfolio_admin WHERE id = 1");
     if (!rows.length && process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
       const salt = crypto.randomBytes(16).toString("hex");
@@ -66,7 +68,22 @@ export default async function handler(req, res) {
       const input = await body(req);
       const rows = await sql.query("SELECT username, password_hash, password_salt FROM portfolio_admin WHERE id = 1");
       const admin = rows[0];
-      if (!admin || String(input.username || "") !== admin.username || !(await checkPassword(input.password, admin))) return send(res, 401, { error: "Invalid username or password." });
+      if (!admin || String(input.username || "") !== admin.username) return send(res, 401, { error: "Invalid username or password." });
+      let passwordOk = await checkPassword(input.password, admin);
+      if (!passwordOk && process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD &&
+          String(input.username || "") === process.env.ADMIN_USERNAME &&
+          String(input.password || "") === process.env.ADMIN_PASSWORD) {
+        const recovery = await sql.query("SELECT used FROM portfolio_admin_recovery WHERE id = 1");
+        if (recovery[0] && !recovery[0].used) {
+          const salt = crypto.randomBytes(16).toString("hex");
+          const hash = (await scrypt(process.env.ADMIN_PASSWORD, salt, 64)).toString("hex");
+          await sql.query("UPDATE portfolio_admin SET username = $1, password_hash = $2, password_salt = $3 WHERE id = 1", [process.env.ADMIN_USERNAME, hash, salt]);
+          await sql.query("UPDATE portfolio_admin_recovery SET used = true WHERE id = 1 AND used = false");
+          await sql.query("DELETE FROM portfolio_sessions");
+          passwordOk = true;
+        }
+      }
+      if (!passwordOk) return send(res, 401, { error: "Invalid username or password." });
       const token = crypto.randomBytes(32).toString("base64url");
       await sql.query("INSERT INTO portfolio_sessions (token_hash, expires_at) VALUES ($1, $2)", [hashToken(token), Date.now() + DAY]);
       return send(res, 200, { ok: true, username: admin.username }, { "Set-Cookie": cookieHeader(token, Math.floor(DAY / 1000)) });
