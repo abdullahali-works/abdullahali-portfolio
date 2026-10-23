@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portfolio Admin — Abdullah Ali</title>
+  <!-- Served by the Node.js backend; same-origin API enables shared persistence. -->
+  <link rel="stylesheet" href="./app.css">
+  <style>
+    .admin-shell{width:min(1100px,calc(100% - 32px));margin:32px auto 70px}
+    .admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+    .admin-top h1{font:600 clamp(28px,4vw,42px) "Space Grotesk",sans-serif;letter-spacing:-.05em;margin:0}
+    .admin-card{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:22px;margin:18px 0}
+    .notice{border:1px solid #d6a24d66;background:#d6a24d12;color:var(--text);padding:15px 17px;border-radius:12px;font-size:13px;margin:15px 0}
+    .admin-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+    .admin-tabs button,.admin-action{background:var(--surface2);border:1px solid var(--line);color:var(--text);padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px}
+    .admin-tabs button.active{background:var(--accent);color:#161320}
+    .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .admin-field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
+    .admin-field label{font-size:12px;color:var(--muted)}
+    .admin-field input,.admin-field textarea,.admin-field select{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px;color:var(--text);width:100%}
+    .admin-field textarea{min-height:90px;resize:vertical}
+    .admin-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+    .item-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+    .item-row small{display:block;color:var(--muted)}
+    .login-box{max-width:450px;margin:55px auto}
+    .status-line{font-size:12px;color:var(--muted)}
+    .pill{font-size:10px;padding:4px 8px;border-radius:100px;background:var(--surface2)}
+    @media(max-width:650px){.admin-grid{grid-template-columns:1fr}.admin-top{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-top">
+      <div>
+        <p class="overline">PRIVATE WORKSPACE</p>
+        <h1>Portfolio Admin</h1>
+        <p class="muted">Manage your portfolio content and appearance.</p>
+      </div>
+      <a class="button button-quiet" href="index.html">View website ↗</a>
+    </header>
+
+    <div id="localWarning" class="notice">
+      <strong>Server connection required.</strong><br>
+      Open this site through the Node.js server, not by double-clicking the HTML file or using GitHub Pages alone. The server saves shared settings and verifies admin credentials.
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginBox" class="admin-card login-box hidden">
+      <h2>Administrator sign in</h2>
+      <p class="muted">Enter your admin username and password to proceed.</p>
+      <form id="loginForm">
+        <div class="admin-field">
+          <label for="username">Username</label>
+          <input id="username" autocomplete="username" required value="portfolioadmin">
+        </div>
+        <div class="admin-field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="button button-primary" type="submit">Sign in ↗</button>
+        <p id="loginMessage" class="status-line"></p>
+      </form>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="adminApp" class="hidden">
+      <div class="admin-card">
+        <div class="admin-top">
+          <div>
+            <strong id="connectionTitle">Local content editor</strong>
+            <p id="connectionText" class="status-line">Changes are stored in this browser.</p>
+          </div>
+          <span id="authBadge" class="pill">LOCAL MODE</span>
+        </div>
+        <div class="admin-actions">
+          <button class="admin-action" id="saveAll">Save changes</button>
+          <button class="admin-action" id="exportData">Export backup</button>
+          <label class="admin-action" for="importFile">Restore backup</label>
+          <input id="importFile" type="file" accept="application/json" class="hidden">
+          <button class="admin-action" id="logoutBtn">Log out</button>
+        </div>
+        <p id="saveStatus" class="status-line" aria-live="polite"></p>
+      </div>
+
+      <div class="admin-tabs" role="tablist">
+        <button class="active" data-tab="profile">Profile</button>
+        <button data-tab="projects">Projects</button>
+        <button data-tab="services">Services</button>
+        <button data-tab="skills">Skills & tools</button>
+        <button data-tab="journey">Education & experience</button>
+        <button data-tab="design">Design & sections</button>
+        <button data-tab="ai">AI support</button>
+        <button data-tab="account">Account settings</button>
+      </div>
+
+      <section class="admin-card tab-panel" id="tab-profile">
+        <h2>Profile & contact</h2>
+        <div class="admin-grid">
+          <div class="admin-field"><label>Display name</label><input id="f-name"></div>
+          <div class="admin-field"><label>Professional role</label><input id="f-role"></div>
+          <div class="admin-field"><label>Hero headline</label><input id="f-tagline"></div>
+          <div class="admin-field"><label>Location</label><input id="f-location"></div>
+          <div class="admin-field"><label>Contact email</label><input id="f-email" type="email"></div>
+          <div class="admin-field"><label>WhatsApp number</label><input id="f-whatsapp"></div>
+          <div class="admin-field"><label>Availability text</label><input id="f-availability"></div>
+          <div class="admin-field"><label>Resume URL (optional)</label><input id="f-resume"></div>
+        </div>
+        <div class="admin-field"><label>Introduction</label><textarea id="f-intro"></textarea></div>
+        <div class="admin-field"><label>About me</label><textarea id="f-about"></textarea></div>
+        <div class="admin-field"><label>Social links — one per line: Label | URL</label><textarea id="f-socials" placeholder="Instagram | https://instagram.com/yourname"></textarea></div>
+        <div class="admin-grid">
+          <div class="admin-field"><label>SEO title</label><input id="f-seoTitle"></div>
+          <div class="admin-field"><label>SEO description</label><input id="f-seoDescription"></div>
+        </div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-projects">
+        <h2>Projects gallery</h2>
+        <div class="admin-grid">
+          <div class="admin-field"><label>Project title</label><input id="p-title"></div>
+          <div class="admin-field"><label>Category</label><input id="p-category"></div>
+          <div class="admin-field"><label>Tools used</label><input id="p-tools"></div>
+          <div class="admin-field"><label>Project / case study URL</label><input id="p-url"></div>
+          <div class="admin-field"><label>Image URL (optional)</label><input id="p-image"></div>
+          <div class="admin-field"><label>Featured?</label><select id="p-featured"><option value="true">Yes</option><option value="false">No</option></select></div>
+        </div>
+        <div class="admin-field"><label>Description</label><textarea id="p-description"></textarea></div>
+        <button class="button button-primary" id="addProject">Add project</button>
+        <div id="projectsList"></div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-services">
+        <h2>Services</h2>
+        <div class="admin-grid">
+          <div class="admin-field"><label>Service title</label><input id="sv-title"></div>
+          <div class="admin-field"><label>Short description</label><input id="sv-description"></div>
+        </div>
+        <button class="button button-primary" id="addService">Add service</button>
+        <div id="servicesList"></div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-skills">
+        <h2>Skills & tools</h2>
+        <div class="admin-grid">
+          <div class="admin-field"><label>Skills (one per line)</label><textarea id="f-skills"></textarea></div>
+          <div class="admin-field"><label>Software & tools (one per line)</label><textarea id="f-tools"></textarea></div>
+        </div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-journey">
+        <h2>Education & experience</h2>
+        <div class="admin-grid">
+          <div class="admin-field"><label>Experience</label><textarea id="f-experience"></textarea></div>
+          <div class="admin-field"><label>Education</label><textarea id="f-education"></textarea></div>
+        </div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-design">
+        <h2>Design settings</h2>
+        <div class="admin-grid">
+          <div class="admin-field">
+            <label>Color theme</label>
+            <select id="f-theme">
+              <option value="midnight">Midnight violet</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+              <option value="forest">Forest</option>
+              <option value="rose">Rose</option>
+              <option value="electric">Electric</option>
+              <option value="royal">Royal</option>
+              <option value="mono">Monochrome</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>Color mode</label>
+            <select id="f-mode">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+          <div class="admin-field">
+            <label>Custom accent color</label>
+            <input id="f-accent" type="color">
+          </div>
+        </div>
+        <div id="sectionToggles" class="admin-grid"></div>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-account">
+        <h2>Account settings</h2>
+        <p class="muted">Change the server-verified admin username and password. Passwords are stored as salted hashes on the server.</p>
+        <form id="accountForm">
+          <div class="admin-grid">
+            <div class="admin-field"><label for="currentAccountPassword">Current password</label><input id="currentAccountPassword" type="password" autocomplete="current-password" required></div>
+            <div class="admin-field"><label for="newAccountUsername">New username</label><input id="newAccountUsername" autocomplete="username" required></div>
+            <div class="admin-field"><label for="newAccountPassword">New password</label><input id="newAccountPassword" type="password" autocomplete="new-password" minlength="12" placeholder="At least 12 characters" required></div>
+            <div class="admin-field"><label for="confirmAccountPassword">Confirm new password</label><input id="confirmAccountPassword" type="password" autocomplete="new-password" minlength="12" required></div>
+          </div>
+          <button class="button button-primary" type="submit">Update login details</button>
+          <p id="accountMessage" class="status-line" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="admin-card tab-panel hidden" id="tab-ai">
+        <h2>Optional AI support</h2>
+        <div class="notice" role="status">
+          AI customer chat is not connected in this shared-admin package. These controls are intentionally not offered as active settings because a secure provider integration, server-side API key, and working chat endpoint must be configured and tested first. The rest of the portfolio works without AI.
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Relative script links for GitHub Pages subfolder -->
+  <script src="./default-content.js"></script>
+  <script src="./admin.js"></script>
+</body>
+</html>

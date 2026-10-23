@@ -1,0 +1,163 @@
+{
+  "site": {
+    "name": "Abdullah Ali",
+    "role": "Multi-Skilled Digital Creator | Video, Web & Design",
+    "tagline": "I create, design, edit, and build digital experiences.",
+    "intro": "A multi-skilled creative working across video editing, web design, graphic design, and social media content. Explore my skills, projects, and services in one place.",
+    "about": "I enjoy turning ideas into clear, engaging digital work—from edited videos and social content to visual designs and responsive websites. I value thoughtful storytelling, clean design, and continuous learning. This portfolio is built to grow as I add new skills and real projects.",
+    "location": "Pakistan",
+    "email": "hello@example.com",
+    "phone": "",
+    "whatsapp": "",
+    "resumeUrl": "",
+    "profileImage": "",
+    "availability": "Available for selected projects",
+    "socials": [
+      {
+        "label": "Instagram",
+        "url": "https://instagram.com/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://youtube.com/"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/"
+      }
+    ],
+    "seoTitle": "Abdullah Ali — Digital Creator, Video Editor, Web & Graphic Design",
+    "seoDescription": "Explore Abdullah Ali’s multi-skill portfolio across video editing, web development, graphic design, and digital content creation."
+  },
+  "skills": [
+    "Video Editing",
+    "Short-form Video Content",
+    "YouTube Content Editing",
+    "Graphic Design",
+    "Social Media Creatives",
+    "Web Design",
+    "Front-end Web Development",
+    "HTML & CSS",
+    "JavaScript Fundamentals",
+    "Content Planning",
+    "Visual Storytelling",
+    "Creative Problem Solving"
+  ],
+  "tools": [
+    "CapCut",
+    "Adobe Premiere Pro",
+    "Canva",
+    "Figma",
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Visual Studio Code",
+    "Git & GitHub"
+  ],
+  "education": [],
+  "experience": [],
+  "services": [
+    {
+      "title": "Video Editing",
+      "description": "Short-form videos, YouTube edits, pacing, captions, and polished audiovisual storytelling."
+    },
+    {
+      "title": "Graphic Design",
+      "description": "Social media posts, thumbnails, promotional graphics, and consistent visual layouts."
+    },
+    {
+      "title": "Web Design & Development",
+      "description": "Responsive portfolio pages and clean front-end layouts built with web fundamentals."
+    },
+    {
+      "title": "Social Media Content",
+      "description": "Platform-ready content concepts, repurposing, and creative assets for digital channels."
+    },
+    {
+      "title": "Digital Content Support",
+      "description": "A flexible creative service combining visuals, editing, and web-ready content."
+    }
+  ],
+  "projects": [
+    {
+      "id": "sample-video-edit",
+      "title": "Video Editing Showcase",
+      "category": "Video Editing",
+      "description": "Sample portfolio slot: replace this with a real edit, your role, the tools used, and a link to the finished video.",
+      "tools": "Add the tools you actually used",
+      "image": "",
+      "url": "",
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": "sample-website",
+      "title": "Responsive Website Concept",
+      "category": "Web Development",
+      "description": "Sample portfolio slot: add a real website or front-end project, explain the problem it solves, and link to a live demo or screenshots.",
+      "tools": "HTML · CSS · JavaScript (edit to match your work)",
+      "image": "",
+      "url": "",
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": "sample-graphic-design",
+      "title": "Graphic Design Collection",
+      "category": "Graphic Design",
+      "description": "Sample portfolio slot: add real thumbnails, social posts, posters, or brand assets and describe your contribution.",
+      "tools": "Add the tools you actually used",
+      "image": "",
+      "url": "",
+      "featured": true,
+      "published": true
+    },
+    {
+      "id": "sample-social-content",
+      "title": "Social Media Content Pack",
+      "category": "Digital Content",
+      "description": "Sample portfolio slot: show a real content set and explain how the pieces work together across platforms.",
+      "tools": "Add the tools you actually used",
+      "image": "",
+      "url": "",
+      "featured": false,
+      "published": true
+    }
+  ],
+  "achievements": [],
+  "certifications": [],
+  "testimonials": [],
+  "sections": {
+    "home": true,
+    "about": true,
+    "skills": true,
+    "projects": true,
+    "services": true,
+    "experience": true,
+    "achievements": true,
+    "contact": true
+  },
+  "theme": "midnight",
+  "mode": "dark",
+  "custom": {
+    "accent": "#9b8cff",
+    "font": "Inter",
+    "motion": true
+  },
+  "ai": {
+    "enabled": false,
+    "provider": "openai",
+    "instructions": "Answer visitors’ questions about my skills, projects, and services using only information in this portfolio. Be clear when a project detail is a sample or has not been provided. If unsure, invite the visitor to contact me by email.",
+    "busyMode": false,
+    "faqs": [
+      {
+        "q": "What skills does this portfolio cover?",
+        "a": "Video editing, graphic design, web design and front-end development, and social media content. Please check the listed projects for real examples as they are added."
+      },
+      {
+        "q": "How can I contact Abdullah?",
+        "a": "Use the contact links and form on the portfolio. The contact email needs to be configured by the owner before publishing."
+      }
+    ]
+  }
+}
