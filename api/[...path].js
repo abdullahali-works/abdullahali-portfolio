@@ -83,7 +83,16 @@ export default async function handler(req, res) {
     }
     if (path === "/api/content" && req.method === "GET") {
       const rows = await sql.query("SELECT content FROM portfolio_data WHERE id = 1");
-      if (!rows.length) return send(res, 200, { site: {}, skills: [], tools: [], projects: [], services: [], education: [], experience: [], sections: {} });
+      if (!rows.length) {
+        let initial = { site: {}, skills: [], tools: [], projects: [], services: [], education: [], experience: [], sections: {} };
+        try {
+          const origin = "https://" + String(req.headers["x-forwarded-host"] || req.headers.host || "").split(",")[0].trim();
+          const response = await fetch(origin + "/content.json");
+          if (response.ok) initial = await response.json();
+        } catch (error) { console.error("Could not load initial portfolio content:", error); }
+        await sql.query("INSERT INTO portfolio_data (id, content) VALUES (1, $1::jsonb) ON CONFLICT (id) DO NOTHING", [JSON.stringify(initial)]);
+        return send(res, 200, initial);
+      }
       return send(res, 200, rows[0].content);
     }
     if (path === "/api/content" && req.method === "PUT") {
